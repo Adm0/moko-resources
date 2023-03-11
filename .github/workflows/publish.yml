@@ -12,12 +12,6 @@ jobs:
   publish:
     name: Publish library at mavenCentral
     runs-on: macOS-latest
-    env:
-      OSSRH_USER: ${{ secrets.OSSRH_USER }}
-      OSSRH_KEY: ${{ secrets.OSSRH_KEY }}
-      SIGNING_KEY_ID: ${{ secrets.SIGNING_KEYID }}
-      SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
-      SIGNING_KEY: ${{ secrets.GPG_KEY_CONTENTS }}
 
     steps:
       - uses: actions/checkout@v1
@@ -25,12 +19,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Publish plugin
-        run: ./gradlew -p resources-generator publishPlugins -Pgradle.publish.key=${{ secrets.GRADLE_PLUGIN_PORTAL_KEY }} -Pgradle.publish.secret=${{ secrets.GRADLE_PLUGIN_PORTAL_SECRET }}
       - name: Prebuild library
         run: ./gradlew publishToMavenLocal
-      - name: Publish library
-        run: ./gradlew publish --no-parallel
   release:
     name: Create release
     needs: publish
